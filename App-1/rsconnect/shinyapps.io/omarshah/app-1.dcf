@@ -1,0 +1,12 @@
+name: app-1
+title:
+username:
+account: omarshah
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 363470
+bundleId: 1441784
+url: https://omarshah.shinyapps.io/app-1/
+when: 1529607174.40118
+asMultiple: FALSE
+asStatic: FALSE
