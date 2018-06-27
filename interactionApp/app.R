@@ -1,6 +1,6 @@
 #variables
 
-internList <- scan("Intern List.csv", sep=",", what=list('character'))
+internList <- scan("internList.csv", sep=",", what=list('character'))
 staffList <- read.table("isbAllStaff",header=FALSE, sep="\t")
 dataDir <- "data" #directory for data
 newLine <- ""
