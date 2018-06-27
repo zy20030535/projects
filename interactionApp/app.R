@@ -9,18 +9,19 @@ library(shiny)
 library(shinyTime)
 
 ui <- fluidPage(headerPanel(
-                tags$h1("QIP."),
-                tags$h2("6/21/18")
+                tags$h1("QIP."), windowTitle = "QIP."
                 ),
                 sidebarLayout(
                   sidebarPanel(
                     dateInput('date',
-                              label = 'Date: yyyy-mm-dd',
+                              label = 'Date:',
                               value = Sys.Date()),
                     selectInput("name", "Who are you?",
-                                choices = internList[[1]]),
+                                choices = internList[[1]],
+				selected = "Ethan Hamilton"),
                     selectInput("partner", "Who did you interact with?",
-                                choices = staffList[[1]]),
+                                choices = staffList[[1]],
+				selected = "Leroy Hood"),
                     selectInput("type", "Interaction Type:",
                                 c("Administrative" = "adm",
                                   "Programming" = "prg",
@@ -30,14 +31,18 @@ ui <- fluidPage(headerPanel(
                                   "Social" = "soc")),
                     timeInput("time", "Time:", value = strptime("12:00:00", "%T")),
                     numericInput("dur", "Duration (min):", 2, min = 1),
-                    #verbatimTextOutput("value"),
                     actionButton(inputId = "submit", 
                                  label = "Submit"),
+			img(src="isb.png", height=20, width=20),
                     
                     tableOutput("data")
                   ),
                   mainPanel(
-                    
+                    tabsetPanel(
+			tabPanel("Network Example", img(src="network.png", height=450, width=750)), 
+		        tabPanel("Project Summary", verbatimTextOutput("summary")), 
+        		tabPanel("Table", tableOutput("table"))
+      			)
                   )
                 )
                 )
