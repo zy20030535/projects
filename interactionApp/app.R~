@@ -1,0 +1,85 @@
+#variables
+
+internList <- scan("Intern List.csv", sep=",", what=list('character'))
+staffList <- read.table("isbAllStaff",header=FALSE, sep="\t")
+#interact <- data.frame("date"=character(), "a"=character(),"b"=character(),"type"=character(),"startTime"=character(),"duration"=numeric(),stringsAsFactors = FALSE)
+interact <- read.table("interactionList.txt", header = FALSE, stringsAsFactors = FALSE)
+newLine <- ""
+
+library(shiny)
+library(shinyTime)
+
+ui <- fluidPage(headerPanel(
+                tags$h1("QIP."),
+                tags$h2("6/21/18")
+                ),
+                sidebarLayout(
+                  sidebarPanel(
+                    dateInput('date',
+                              label = 'Date: yyyy-mm-dd',
+                              value = Sys.Date()),
+                    selectInput("name", "Who are you?",
+                                choices = internList[[1]]),
+                    selectInput("partner", "Who did you interact with?",
+                                choices = staffList[[1]]),
+                    selectInput("type", "Interaction Type:",
+                                c("Administrative" = "adm",
+                                  "Programming" = "prg",
+                                  "Data" = "data",
+                                  "Biology" = "bio",
+                                  "Consulting" = "con",
+                                  "Social" = "soc")),
+                    timeInput("time", "Time:", value = strptime("12:00:00", "%T")),
+                    numericInput("dur", "Duration (min):", 2, min = 1),
+                    verbatimTextOutput("value"),
+                    actionButton(inputId = "update", 
+                                 label = "Submit"),
+                    
+                    tableOutput("data")
+                  ),
+                  mainPanel(
+                    textOutput("test2")
+                  )
+                )
+                )
+                
+
+server <- function(input,output) {
+  
+  observe(print(strftime(input$time, "%R")))
+  
+  test2 <- eventReactive(input$update, {
+    newLine <- list(as.character(input$date),input$name,input$partner,input$type,as.character(input$time),input$dur)
+    #print(newLine)
+  })
+  
+  output$test2 <- renderUI({
+    print(data.frame(test2()))
+    #interact <- rbind(interact,test2())
+    #print(interact)
+    #write.csv(interact, file = "interactionDataMaster.csv", quote=FALSE)
+    #print(interact)
+  })
+  
+  data <- eventReactive(input$update, {
+    rnorm(input$num)
+  })
+  
+  title <- eventReactive(input$update, {
+    input$title
+  })
+  
+  observeEvent(input$button, {
+    print(as.numeric(input$button))
+  })
+  
+  output$hist <- renderPlot( {
+    hist(data(), main = title())
+  })
+  output$stats <- renderPrint({
+    summary(data())
+  })
+  
+}
+
+shinyApp(ui=ui,server=server)

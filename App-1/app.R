@@ -1,24 +1,28 @@
 #Shiny Template
 
 library(shiny)
-ui <- fluidPage("Trial App",
-                
-                sliderInput(inputId = "num",
-                            label = "Choose a Number:",
-                            value = 25, 
-                            min = 1, 
-                            max = 100),
-                
-                textInput(inputId = "title",
-                          label = "Create a Title:",
-                          value = "Histogram of Random Normal Values"),
-                
-                actionButton(inputId = "update", 
-                             label = "Update Graph"),
-                
-                plotOutput("hist"),
-                
-                verbatimTextOutput("stats")
+ui <- fluidPage(headerPanel(
+                tags$h1("Trial App"),
+                tags$h2("6/21/18")
+                ),
+                sidebarLayout(
+                  sidebarPanel(
+                    sliderInput(inputId = "num",
+                                label = "Choose a Number:",
+                                value = 25, 
+                                min = 1, 
+                                max = 100),
+                    textInput(inputId = "title",
+                              label = "Create a Title:",
+                              value = "Histogram of Random Normal Values"),
+                    actionButton(inputId = "update", 
+                                 label = "Update Graph")
+                  ),
+                  mainPanel(
+                    plotOutput("hist"),
+                    verbatimTextOutput("stats")
+                  )
+                )
                 )
 
 server <- function(input,output) {
