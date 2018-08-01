@@ -29,7 +29,7 @@ ui <- fluidPage(headerPanel(
                                   "Biology" = "bio",
                                   "Consulting" = "con",
                                   "Social" = "soc")),
-                    timeInput("time", "Time:", value = strptime("12:00:00", "%T")),
+                    timeInput("time", "Time:", value = Sys.time()),
                     numericInput("dur", "Duration (min):", 2, min = 1),
                     actionButton(inputId = "submit", 
                                  label = "Submit"),
@@ -59,7 +59,8 @@ server <- function(input,output) {
 				stringsAsFactors = FALSE)
 
 			print(newLine)
-        		filename <- sprintf("%s/interaction-%s.RData",dataDir, Sys.time())
+        		filename <- sprintf("%s/interaction-%s-%s.RData", dataDir,input$name,Sys.time())
+			filename <- gsub(" ", "", filename, fixed = TRUE)
 			save(newLine, file = filename)
 
 			print("DONE")
