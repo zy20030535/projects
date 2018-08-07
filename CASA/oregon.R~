@@ -1,0 +1,46 @@
+library(RCyjs)
+library(graph)
+#----------------------------------------------------------------------------------------------------
+county <- c("Polk", "Linn", "Yamhill", "Baker, Malheur, Union", "Multnomah, Washington, Columbia", "Lane", "Wallowa")
+served <- c(122, 185, 92, 169, 1026, 424, 0)
+inCare <- c(171, 301, 157, 370, 3179, 1591, 18)
+fte <- c(0.5, 5.25, 2.5, 2.75, 26.3, 12.5, 0)
+revenue <- c(107538, 334320, 142129, 108197, 1891064, 866289, 0)
+expenses <- c(82179, 289334, 133492, 98900, 1795229, 866289, 0)
+expensesPerChild <- c(674, 1564, 1451, 585, 1750, 2043, 0)
+
+oregonCasa <- data.frame(matrix(nrow=7, ncol=7))
+colnames(oregonCasa) <- c("county", "served", "inCare", "fte", "revenue", "expenses", "expensesPerChild")
+
+oregonCasa$county <- county
+oregonCasa$served <- served
+oregonCasa$inCare <- inCare
+oregonCasa$fte <- fte
+oregonCasa$revenue <- revenue
+oregonCasa$expenses <- expenses
+oregonCasa$expensesPerChild <- expensesPerChild
+
+oregonCasa
+#----------------------------------------------------------------------------------------------------
+gnel <- new("graphNEL", edgemode="undirected")
+
+all.nodes <- c(oregonCasa$county)
+
+all.nodes[length(all.nodes)+1] <- "Oregon"
+
+gnel <- graph::addNode(all.nodes, gnel)
+gnel <- graph::addEdge(oregonCasa$county, "Oregon", gnel)
+
+nodeDataDefaults(gnel, attr="county") <- ""
+nodeDataDefaults(gnel, attr="state") <- ""
+edgeDataDefaults(gnel, attr="state") <- ""
+
+nodeData(gnel, nodes(gnel), attr="state") <- "Oregon"
+
+gnel
+#----------------------------------------------------------------------------------------------------
+rcy <- RCyjs()
+setGraph(rcy, gnel)
+layout(rcy, "cose")
+
+loadStyleFile(rcy, "style.js")
