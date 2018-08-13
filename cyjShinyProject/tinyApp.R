@@ -23,12 +23,8 @@ ui = shinyUI(fluidPage(
       sidebarPanel(
           actionButton("fit", "Fit Graph"),
           selectInput("loadStyleFile", "Choose Style: ",
-                      choices=c("",
-                                "geneStyle.js",
-                                "simpleStyle.js",
-                                "sillyStyle.js")),
-                                
-          actionButton("loadStyleFileButton", "LOAD style.js"),
+                      choices=c("style.js")),
+          #actionButton("loadStyleFileButton", "LOAD style.js"),
           selectInput("doLayout", "Select Layout:",
                       choices=c("",
                                 "cose",
@@ -42,10 +38,7 @@ ui = shinyUI(fluidPage(
                                 "cose-bilkent")),
 
           selectInput("selectName", "Node Name:",
-                      choices = c("",
-                                  "Gene A",
-                                  "Gene B",
-                                  "Gene C")),
+                      choices = staffList[[1]]),
           actionButton("sfn", "Select First Neighbor"),
          
           actionButton("getSelectedNodes", "Get Selected Nodes"),
@@ -67,10 +60,10 @@ server = function(input, output, session)
         session$sendCustomMessage(type="doLayout", message=list(input$doLayout))
     })
 
-    #observeEvent(input$loadStyleFile, {
-     #   printf("tinyApp.R, about to sendCustomMessage, loadStyleFile")
-      #  loadStyleFile(input$loadStyleFile)
-    #})
+    observeEvent(input$loadStyleFile, {
+        printf("tinyApp.R, about to sendCustomMessage, loadStyleFile")
+        loadStyleFile(input$loadStyleFile)
+    })
     
     observeEvent(input$selectName, {
         printf("about to sendCustomMessage, selectNodes")
@@ -187,7 +180,7 @@ graphToJSON <- function(g) #Copied from RCyjs/R/utils.R
 #------------------------------------------------------------------------------------------------------------------------
 loadData <- function()
 {
-    load("interaction_bundle-2018-07-30.RData")
+    load("interaction_bundle-2018-08-10.RData")
 
     week <- "all"  # "all", 1, 2, 3, 4, 5, 6
 
@@ -263,6 +256,6 @@ simpleGraph <- function() {
     gnel.json
 }#simpleGraph
 #------------------------------------------------------------------------------------------
-graph <- simpleGraph()
+graph <-loadData()
 
 shinyApp(ui = ui, server = server)
